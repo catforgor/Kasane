@@ -4,18 +4,20 @@ import dev.kasane.core.Layer
 import dev.kasane.core.Service
 import kotlinx.coroutines.sync.Semaphore
 
+class Overloaded : Exception("Service overloaded, request shed")
+
 /**
  *
- * Bounds number on in flight requests through the wrapped service
+ * Bounds number of in flight requests through the wrapped service
  *
- * Queues callers past limit, use [LoadShedLayer] for rejecting instead
+ * Rejects callers past limit, use [ConcurrencyLimitLayer] for queueing instead
  *
  */
-class ConcurrencyLimitLayer<Req, Resp>(private val maxConcurrent: Int) : Layer<Req, Resp> {
+class LoadShedLayer<Req, Resp>(private val maxConcurrent: Int) : Layer<Req, Resp> {
     override fun wrap(inner: Service<Req, Resp>): Service<Req, Resp> {
         val semaphore = Semaphore(maxConcurrent)
         return Service { req ->
-            semaphore.acquire()
+            if (!semaphore.tryAcquire()) throw Overloaded()
             try {
                 inner.invoke(req)
             } finally {
