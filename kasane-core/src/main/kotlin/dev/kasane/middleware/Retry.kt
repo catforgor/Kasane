@@ -21,7 +21,7 @@ fun interface RetryPolicy<Req, Resp> {
 }
 
 /**
- * Assumes [Req] is safe to invoke more than one, dont wrap around a service where 
+ * Assumes [Req] is safe to invoke more than once, dont wrap around a service where 
  * something cant happen twice
  * 
  * TODO: fix above comment
