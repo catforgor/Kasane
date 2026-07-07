@@ -2,6 +2,7 @@ package dev.kasane.middleware
 
 import dev.kasane.core.Layer
 import dev.kasane.core.Service
+import dev.kasane.core.ServiceBuilder
 import kotlinx.coroutines.sync.Semaphore
 
 /**
@@ -24,3 +25,6 @@ class ConcurrencyLimitLayer<Req, Resp>(private val maxConcurrent: Int) : Layer<R
         }
     }
 }
+
+fun <Req, Resp> ServiceBuilder<Req, Resp>.concurrencyLimit(maxConcurrent: Int): ServiceBuilder<Req, Resp> =
+    layer(ConcurrencyLimitLayer(maxConcurrent))

@@ -2,6 +2,7 @@ package dev.kasane.middleware
 
 import dev.kasane.core.Layer
 import dev.kasane.core.Service
+import dev.kasane.core.ServiceBuilder
 import kotlinx.coroutines.CancellationException
 
 /**
@@ -44,3 +45,6 @@ class RetryLayer<Req, Resp>(private val policy: RetryPolicy<Req, Resp>) : Layer<
         throw IllegalStateException("unreachable")
     }
 }
+
+fun <Req, Resp> ServiceBuilder<Req, Resp>.retry(policy: RetryPolicy<Req, Resp>): ServiceBuilder<Req, Resp> =
+    layer(RetryLayer(policy))

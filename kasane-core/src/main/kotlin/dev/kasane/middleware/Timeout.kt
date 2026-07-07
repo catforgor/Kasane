@@ -2,6 +2,7 @@ package dev.kasane.middleware
 
 import dev.kasane.core.Layer
 import dev.kasane.core.Service
+import dev.kasane.core.ServiceBuilder
 import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.withTimeout
 import kotlin.time.Duration
@@ -17,3 +18,6 @@ class TimeoutLayer<Req, Resp>(private val duration: Duration) : Layer<Req, Resp>
         }
     }
 }
+
+fun <Req, Resp> ServiceBuilder<Req, Resp>.timeout(duration: Duration): ServiceBuilder<Req, Resp> =
+    layer(TimeoutLayer(duration))

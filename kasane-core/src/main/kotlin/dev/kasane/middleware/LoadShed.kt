@@ -2,6 +2,7 @@ package dev.kasane.middleware
 
 import dev.kasane.core.Layer
 import dev.kasane.core.Service
+import dev.kasane.core.ServiceBuilder
 import kotlinx.coroutines.sync.Semaphore
 
 class Overloaded : Exception("Service overloaded, request shed")
@@ -26,3 +27,6 @@ class LoadShedLayer<Req, Resp>(private val maxConcurrent: Int) : Layer<Req, Resp
         }
     }
 }
+
+fun <Req, Resp> ServiceBuilder<Req, Resp>.loadShed(maxConcurrent: Int): ServiceBuilder<Req, Resp> =
+    layer(LoadShedLayer(maxConcurrent))
