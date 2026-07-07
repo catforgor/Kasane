@@ -22,7 +22,7 @@ class ServiceBuilderTest {
         val trace = mutableListOf<String>()
         val service = ServiceBuilder<String, String>()
             .layer(tracing("A", trace))
-            .service(Service { req -> "$req-handled" })
+            .service { req -> "$req-handled" }
 
         val result = service.invoke("req")
 
